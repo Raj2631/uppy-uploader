@@ -44,7 +44,7 @@ export function ActionButtons({
           onClick={onRetryUploads}
           className="px-4 py-2 cursor-pointer bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors"
         >
-          Retry Failed
+          Retry Failed Images
         </button>
       )}
 

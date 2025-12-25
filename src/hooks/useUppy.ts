@@ -131,8 +131,14 @@ export function useUppy() {
       }
     });
 
-    uppy.on("complete", () => {
+    uppy.on("complete", (result) => {
       setIsUploading(false);
+      const successful = result.successful?.length || 0;
+      const failed = result.failed?.length || 0;
+      const total = successful + failed;
+      if (failed > 0) {
+        toast.error(`${failed} out of ${total} images failed to upload.`);
+      }
     });
 
     uppy.on("upload-progress", (file) => {
@@ -194,9 +200,16 @@ export function useUppy() {
 
   const handleFilesAdded = (files: File[]) => {
     if (!uppyRef.current) return;
+    const existingFileNames = uppyRef.current
+      .getFiles()
+      .map((file) => file.name);
 
     files.forEach((file) => {
-      uppyRef.current?.addFile(file);
+      if (existingFileNames.includes(file.name)) {
+        toast.error(`File "${file.name}" already exists.`);
+      } else {
+        uppyRef.current?.addFile(file);
+      }
     });
   };
 
