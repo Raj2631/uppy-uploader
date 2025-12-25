@@ -194,6 +194,12 @@ export function useUppy() {
     completedFiles.forEach((file) => {
       uppyRef.current?.removeFile(file.id);
     });
+
+    setProgress((prev) => ({
+      ...prev,
+      totalFiles: prev.totalFiles - completedFiles.length,
+      completedFiles: 0,
+    }));
     toast.success("Cleared uploaded images successfully");
   };
 
