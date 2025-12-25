@@ -23,6 +23,8 @@ export function useUppy() {
   const [progress, setProgress] = useState<UploadProgress>({
     totalFiles: 0,
     completedFiles: 0,
+    totalBytes: 0,
+    uploadedBytes: 0,
   });
 
   useEffect(() => {
@@ -70,10 +72,11 @@ export function useUppy() {
     uppy.on("upload", () => {
       setIsUploading(true);
       const allFiles = uppy.getFiles();
-      setProgress({
+      setProgress((prev) => ({
+        ...prev,
         totalFiles: allFiles.length,
         completedFiles: 0,
-      });
+      }));
     });
 
     uppy.on("complete", () => {
@@ -87,6 +90,20 @@ export function useUppy() {
           f.id === file.id ? { ...f, progress: file.progress } : f
         )
       );
+
+      const allFiles = uppy.getFiles();
+
+      const totalBytes = allFiles.reduce((sum, f) => sum + (f.size || 0), 0);
+      const uploadedBytes = allFiles.reduce(
+        (sum, f) => sum + (f.progress?.bytesUploaded || 0),
+        0
+      );
+
+      setProgress((prev) => ({
+        ...prev,
+        totalBytes,
+        uploadedBytes,
+      }));
     });
 
     uppy.on("upload-success", (file) => {

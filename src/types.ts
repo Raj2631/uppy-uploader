@@ -11,4 +11,6 @@ export type FileWithThumbnail = {
 export type UploadProgress = {
   totalFiles: number;
   completedFiles: number;
+  totalBytes: number;
+  uploadedBytes: number;
 };
