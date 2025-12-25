@@ -21,13 +21,15 @@ export function DropZone({ onFilesAdded, disabled = false }: DropZoneProps) {
       },
       multiple: true,
       maxSize: 10 * 1024 * 1024, // 10MB per file
-      onDrop: (acceptedFiles, fileRejections, event) => {
-        console.log("react-dropzone onDrop event:", event);
-        console.log("Accepted files:", acceptedFiles);
-        console.log("Rejected files:", fileRejections);
-
+      onDrop: (acceptedFiles, fileRejections) => {
         if (fileRejections.length) {
-          toast.error(fileRejections[0].errors[0].message, {});
+          if (fileRejections[0].errors[0].code === "file-too-large") {
+            toast.error(
+              `File "${fileRejections[0].file.name}" is too large. Max size is 10MB.`
+            );
+          } else {
+            toast.error(fileRejections[0].errors[0].message, {});
+          }
         }
 
         if (!acceptedFiles.length) return;
@@ -50,7 +52,7 @@ export function DropZone({ onFilesAdded, disabled = false }: DropZoneProps) {
     ? "opacity-50 cursor-not-allowed"
     : "cursor-pointer";
 
-  const dropzoneClassName = `${baseClasses} ${stateClasses} ${disabledClasses}`;
+  const dropzoneClassName = `${baseClasses} ${stateClasses} ${disabledClasses} hidden md:block`;
 
   return (
     <div
