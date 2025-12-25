@@ -16,7 +16,10 @@ function App() {
     uppy,
     isUploading,
     progress,
+    clearCompleted,
   } = useUppy();
+
+  const hasCompleted = files.some((f) => f.progress?.uploadComplete);
 
   return (
     <>
@@ -54,6 +57,8 @@ function App() {
               <ActionButtons
                 hasFiles={files.length > 0}
                 onUpload={uploadFiles}
+                hasCompleted={hasCompleted}
+                onClearCompleted={clearCompleted}
               />
 
               {(isUploading || progress.completedFiles) && (

@@ -3,6 +3,7 @@ import Uppy from "@uppy/core";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
 import XHRUpload from "@uppy/xhr-upload";
 import type { FileWithThumbnail, UploadProgress } from "../types";
+import toast from "react-hot-toast";
 
 const convertFile = (file: any): FileWithThumbnail => {
   return {
@@ -15,17 +16,19 @@ const convertFile = (file: any): FileWithThumbnail => {
   };
 };
 
+const DEFAULT_PROGRESS = {
+  totalFiles: 0,
+  completedFiles: 0,
+  totalBytes: 0,
+  uploadedBytes: 0,
+};
+
 export function useUppy() {
   const [files, setFiles] = useState<FileWithThumbnail[]>([]);
   const uppyRef = useRef<Uppy | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  const [progress, setProgress] = useState<UploadProgress>({
-    totalFiles: 0,
-    completedFiles: 0,
-    totalBytes: 0,
-    uploadedBytes: 0,
-  });
+  const [progress, setProgress] = useState<UploadProgress>(DEFAULT_PROGRESS);
 
   useEffect(() => {
     const uppy = new Uppy({
@@ -168,6 +171,19 @@ export function useUppy() {
     await uppyRef.current.upload();
   }, []);
 
+  const clearCompleted = useCallback(() => {
+    if (!uppyRef.current) return;
+    const state = uppyRef.current.getState();
+    const completedFiles = Object.values(state.files).filter(
+      (f) => f.progress?.uploadComplete
+    );
+    completedFiles.forEach((file) => {
+      uppyRef.current?.removeFile(file.id);
+    });
+    setProgress(DEFAULT_PROGRESS);
+    toast.success("Cleared uploaded images successfully");
+  }, []);
+
   return {
     uppy: uppyRef.current,
     files,
@@ -176,5 +192,6 @@ export function useUppy() {
     uploadFiles,
     isUploading,
     progress,
+    clearCompleted,
   };
 }
