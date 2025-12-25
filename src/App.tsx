@@ -13,14 +13,14 @@ function App() {
     handleFilesAdded,
     removeFile,
     uploadFiles,
-    uppy,
     isUploading,
     progress,
     clearCompleted,
+    retryUploads,
   } = useUppy();
 
   const hasCompleted = files.some((f) => f.progress?.uploadComplete);
-
+  const hasErrors = files.some((f) => f.error);
   return (
     <>
       <Toaster />
@@ -45,13 +45,6 @@ function App() {
             </div>
           )}
 
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer my-4"
-            onClick={() => console.log(files, uppy?.getFiles())}
-          >
-            Log
-          </button>
-
           {files.length > 0 && (
             <>
               <ActionButtons
@@ -59,9 +52,11 @@ function App() {
                 onUpload={uploadFiles}
                 hasCompleted={hasCompleted}
                 onClearCompleted={clearCompleted}
+                hasErrors={hasErrors}
+                onRetryUploads={retryUploads}
               />
 
-              {(isUploading || progress.completedFiles) && (
+              {files.length && (
                 <ProgressBar progress={progress} isUploading={isUploading} />
               )}
 

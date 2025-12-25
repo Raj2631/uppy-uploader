@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Uppy from "@uppy/core";
 import ThumbnailGenerator from "@uppy/thumbnail-generator";
 import XHRUpload from "@uppy/xhr-upload";
@@ -49,9 +49,21 @@ export function useUppy() {
       thumbnailWidth: 200,
       thumbnailHeight: 200,
     });
+    const updateProgressAndFiles = () => {
+      if (!uppyRef.current) return;
+      const allFiles = uppyRef.current.getFiles();
+      const totalBytes = allFiles.reduce((sum, f) => sum + (f.size || 0), 0);
+
+      setProgress((prev) => ({
+        ...prev,
+        totalFiles: allFiles.length,
+        totalBytes,
+      }));
+    };
 
     uppy.on("file-added", (file) => {
       setFiles((prev) => [...prev, convertFile(file)]);
+      updateProgressAndFiles();
     });
 
     uppy.on("thumbnail:generated", (file, preview) => {
@@ -62,6 +74,7 @@ export function useUppy() {
 
     uppy.on("file-removed", (file) => {
       setFiles((prev) => prev.filter((f) => f.id !== file.id));
+      updateProgressAndFiles();
     });
 
     uppy.use(XHRUpload, {
@@ -143,7 +156,7 @@ export function useUppy() {
     };
   }, []);
 
-  const handleFilesAdded = useCallback((files: File[]) => {
+  const handleFilesAdded = (files: File[]) => {
     if (!uppyRef.current) return;
 
     files.forEach((file) => {
@@ -151,14 +164,14 @@ export function useUppy() {
     });
 
     console.log("Uppy files:", uppyRef.current?.getFiles());
-  }, []);
+  };
 
-  const removeFile = useCallback((fileId: string) => {
+  const removeFile = (fileId: string) => {
     if (!uppyRef.current) return;
     uppyRef.current.removeFile(fileId);
-  }, []);
+  };
 
-  const uploadFiles = useCallback(async () => {
+  const uploadFiles = async () => {
     if (!uppyRef.current) return;
 
     const filesToUpload = uppyRef.current.getFiles();
@@ -169,9 +182,9 @@ export function useUppy() {
     });
 
     await uppyRef.current.upload();
-  }, []);
+  };
 
-  const clearCompleted = useCallback(() => {
+  const clearCompleted = () => {
     if (!uppyRef.current) return;
     const state = uppyRef.current.getState();
     const completedFiles = Object.values(state.files).filter(
@@ -180,9 +193,24 @@ export function useUppy() {
     completedFiles.forEach((file) => {
       uppyRef.current?.removeFile(file.id);
     });
-    setProgress(DEFAULT_PROGRESS);
     toast.success("Cleared uploaded images successfully");
-  }, []);
+  };
+
+  const retryUploads = () => {
+    setFiles((prev) =>
+      prev.map((f) => {
+        if (f.error) {
+          return {
+            ...f,
+            error: undefined,
+            progress: undefined,
+          };
+        }
+        return f;
+      })
+    );
+    uppyRef.current?.retryAll();
+  };
 
   return {
     uppy: uppyRef.current,
@@ -193,5 +221,6 @@ export function useUppy() {
     isUploading,
     progress,
     clearCompleted,
+    retryUploads,
   };
 }
