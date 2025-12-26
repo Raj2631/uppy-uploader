@@ -1,75 +1,72 @@
-# React + TypeScript + Vite
+# PicSee Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+My submission for the PicSee image uploader assignment.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project involves building a production-ready image uploader in React using Uppy's headless/core API with a fully custom UI. The goal is to showcase the ability to work with third-party libraries at a low level while delivering a polished and responsive user experience.
 
-## React Compiler
+## Setup
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+To set up and run the project, follow these steps:
 
-Note: This will impact Vite dev & build performances.
+1. Clone the repository:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/your-username/PicSee-assignment.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Navigate to the project directory:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd PicSee-assignment
 ```
+
+3. Install the dependencies (use pnpm):
+
+```bash
+pnpm install
+```
+
+4. Start the development server:
+
+```bash
+pnpm dev
+```
+
+5. Open your browser and go to `http://localhost:5173/` to view the application.
+
+### Environment Variables and Cloudinary Setup
+
+Create a `.env` file in the root of the project and add the following variables:
+
+```env
+VITE_CLOUDINARY_NAME=<your-cloudinary-cloud-name>
+VITE_UPLOAD_PRESET_NAME=<your-upload-preset-name>
+```
+
+Replace `<your-cloudinary-cloud-name>` and `<your-upload-preset-name>` with the values from your Cloudinary account.
+
+## Architecture
+
+This project follows a modular and scalable architecture designed for maintainability and ease of development. Below is an overview of the key components:
+
+### 1. **Folder Structure**
+
+The project is organized into the following main directories:
+
+- **src/**: Contains all the source code for the application.
+  - **components/**: Reusable React components.
+  - **hooks/**: Custom React hooks for managing reusable logic.
+
+### 3. **TypeScript Integration**
+
+TypeScript is used throughout the project to ensure type safety and reduce runtime errors. All components, hooks, and services are strongly typed.
+
+### 4. **Styling**
+
+The project uses [Tailwind CSS](https://tailwindcss.com/) for utility-first and responsive styling. Tailwind CSS allows for rapid UI development with a consistent design system.
+
+### 7. **Build and Deployment**
+
+This project is build using [Vite](https://vite.dev/) and deployed to [Vercel](https://vercel.com/)
