@@ -5,8 +5,8 @@ interface ProgressBarProps {
   isUploading: boolean;
 }
 
-export function ProgressBar({ progress }: ProgressBarProps) {
-  if (progress.completedFiles === 0) {
+export function ProgressBar({ progress, isUploading }: ProgressBarProps) {
+  if (!isUploading && progress.completedFiles === 0) {
     return null;
   }
 
