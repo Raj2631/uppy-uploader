@@ -13,7 +13,7 @@ To set up and run the project, follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone git clone https://github.com/Raj2631/uppy-uploader.git
+git clone https://github.com/Raj2631/uppy-uploader.git
 ```
 
 2. Navigate to the project directory:
