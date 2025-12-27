@@ -67,6 +67,6 @@ TypeScript is used throughout the project to ensure type safety and reduce runti
 
 The project uses [Tailwind CSS](https://tailwindcss.com/) for utility-first and responsive styling. Tailwind CSS allows for rapid UI development with a consistent design system.
 
-### 4åß. **Build and Deployment**
+### 4. **Build and Deployment**
 
 This project is build using [Vite](https://vite.dev/) and deployed to [Vercel](https://vercel.com/)
